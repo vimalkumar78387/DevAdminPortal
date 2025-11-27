@@ -4,37 +4,46 @@ import { LoginForm } from "./login-form";
 
 export default function LoginPage() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-12">
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 opacity-80" />
-      <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-indigo-500/30 blur-3xl" />
-      <div className="absolute -right-16 bottom-10 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl" />
-      <div className="relative grid w-full max-w-5xl grid-cols-1 gap-8 rounded-3xl border border-white/10 bg-white/10 p-10 shadow-2xl backdrop-blur-xl ring-1 ring-white/20 md:grid-cols-2">
-        <div className="flex flex-col justify-between gap-10">
-          <div className="flex items-center gap-4 text-white">
+    <main className="relative flex min-h-screen w-screen items-stretch overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.25),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(14,165,233,0.2),transparent_30%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.25),transparent_35%)]" />
+      <div className="relative grid h-screen w-full grid-cols-1 overflow-hidden md:grid-cols-5">
+        <div className="col-span-3 flex min-h-full flex-col justify-between gap-10 bg-gradient-to-br from-blue-700 via-indigo-700 to-slate-900 p-12 text-white">
+          <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-white shadow-lg shadow-indigo-500/30 ring-1 ring-white/20">
               <ShieldCheck className="h-6 w-6" />
             </div>
             <div className="flex flex-col gap-2">
-              <div className="inline-flex items-center gap-2 rounded-xl bg-white/90 px-3 py-2 shadow-lg shadow-slate-900/20">
-                <img
-                  src="https://settlepaisa.sabpaisa.in/img/logo/logo-dark-full.png"
-                  alt="SabPaisa logo"
-                  className="h-7 w-auto"
-                  loading="lazy"
-                />
-              </div>
-              <h1 className="text-xl font-semibold text-white/90">DevAdminPortal</h1>
+              <img
+                src="https://sabpaisa.in/wp-content/uploads/2023/06/logo.png"
+                alt="SabPaisa logo"
+                className="h-8 w-auto drop-shadow"
+                loading="lazy"
+              />
+              <h1 className="text-2xl font-semibold text-white/90">DevAdminPortal</h1>
             </div>
           </div>
-          <div className="space-y-4 text-white">
-            <h2 className="text-3xl font-semibold leading-tight">Welcome back, moderator</h2>
-            <p className="text-base text-white/70">
+          <div className="space-y-6">
+            <h2 className="text-4xl font-semibold leading-tight">Welcome back, moderator</h2>
+            <p className="text-base text-white/80">
               Sign in to review community posts, triage answers, and keep the discussion healthy. Only authorized product owners should proceed.
             </p>
-            <div className="flex flex-wrap gap-2 text-xs text-white/80">
-              <span className="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/20">Secure cookie auth</span>
-              <span className="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/20">Live PostgreSQL data</span>
-              <span className="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/20">Fast moderation tools</span>
+            <div className="grid grid-cols-2 gap-3 text-xs text-white/85">
+              <div className="rounded-xl bg-white/10 px-4 py-3 ring-1 ring-white/10">
+                <p className="font-semibold">Secure cookie auth</p>
+                <p className="text-white/70">httpOnly session with signed tokens</p>
+              </div>
+              <div className="rounded-xl bg-white/10 px-4 py-3 ring-1 ring-white/10">
+                <p className="font-semibold">Live PostgreSQL</p>
+                <p className="text-white/70">Moderate data in real time</p>
+              </div>
+              <div className="rounded-xl bg-white/10 px-4 py-3 ring-1 ring-white/10">
+                <p className="font-semibold">Drizzle ORM</p>
+                <p className="text-white/70">Typed queries + migrations</p>
+              </div>
+              <div className="rounded-xl bg-white/10 px-4 py-3 ring-1 ring-white/10">
+                <p className="font-semibold">Fast actions</p>
+                <p className="text-white/70">Delete posts & answers instantly</p>
+              </div>
             </div>
           </div>
           <p className="text-sm text-white/70">
@@ -45,17 +54,19 @@ export default function LoginPage() {
             .
           </p>
         </div>
-        <div className="rounded-2xl border border-white/10 bg-white/80 p-8 shadow-xl shadow-slate-900/20 backdrop-blur">
-          <div className="mb-6 space-y-2">
+        <div className="col-span-2 flex min-h-full flex-col bg-white/95 p-12 backdrop-blur">
+          <div className="mb-8 space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
               Admin Access
             </p>
-            <h3 className="text-2xl font-bold text-slate-900">Login</h3>
+            <h3 className="text-3xl font-bold text-slate-900">Login</h3>
             <p className="text-sm text-slate-600">
               Enter your admin username and password to continue.
             </p>
           </div>
-          <LoginForm />
+          <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-900/10">
+            <LoginForm />
+          </div>
         </div>
       </div>
     </main>

@@ -54,7 +54,6 @@ export function PostsTable() {
     const target = deleteTarget;
     setDeleteTarget(null);
     if (!data) return;
-    // optimistic
     mutate(
       {
         ...data,
@@ -82,9 +81,9 @@ export function PostsTable() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-1 items-center gap-2">
+    <div className="w-full space-y-4">
+      <div className="flex flex-col gap-3 border-b border-slate-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-1 items-center gap-2 text-slate-900">
           <Input
             placeholder="Search by title, body, client code"
             value={filters.search ?? ""}
@@ -105,17 +104,17 @@ export function PostsTable() {
             placeholder="Category"
             value={filters.category ?? ""}
             onChange={(e) => setFilters((prev) => ({ ...prev, page: 1, category: e.target.value || undefined }))}
-            className="hidden sm:block"
+            className="hidden border border-slate-200 bg-white text-slate-800 sm:block"
           />
         </div>
-        <div className="flex items-center gap-2 text-sm text-slate-500">
+        <div className="flex items-center gap-2 text-sm text-slate-600">
           <span className="rounded-full bg-slate-100 px-3 py-1">Page {data?.pagination.page ?? filters.page}</span>
           <span className="rounded-full bg-slate-100 px-3 py-1">{data?.pagination.total ?? 0} results</span>
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <table className="min-w-full divide-y divide-slate-100">
+      <div className="overflow-x-auto bg-white">
+        <table className="min-w-full divide-y divide-slate-100 text-slate-900">
           <thead className="bg-slate-50">
             <tr>
               <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Title</th>
@@ -132,21 +131,21 @@ export function PostsTable() {
               <tr key={post.id} className="transition hover:bg-indigo-50">
                 <td className="px-4 py-3">
                   <div className="space-y-1">
-                    <p className="font-semibold text-slate-900 flex items-center gap-2">
+                    <p className="flex items-center gap-2 font-semibold text-slate-900">
                       <Eye className="h-4 w-4 text-indigo-500" />
                       {post.title}
                     </p>
                     <p className="text-xs text-slate-500">{truncate(post.body, 90)}</p>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-slate-700 flex items-center gap-1">
+                <td className="flex items-center gap-1 px-4 py-3 text-slate-700">
                   <Folder className="h-4 w-4 text-emerald-500" />
                   {post.categoryId ?? "—"}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-1">
                     {(post.tags || []).slice(0, 3).map((tag) => (
-                      <Badge key={tag} variant="muted" className="flex items-center gap-1">
+                      <Badge key={tag} variant="muted" className="flex items-center gap-1 bg-slate-100 text-slate-700 ring-1 ring-slate-200">
                         <Tag className="h-3 w-3 text-slate-500" />
                         {tag}
                       </Badge>
@@ -155,7 +154,7 @@ export function PostsTable() {
                 </td>
                 <td className="px-4 py-3 text-slate-700">{post.clientCode ?? "—"}</td>
                 <td className="px-4 py-3 text-slate-700">{post.replyCount ?? 0}</td>
-                <td className="px-4 py-3 text-slate-700 flex items-center gap-1">
+                <td className="flex items-center gap-1 px-4 py-3 text-slate-700">
                   <Calendar className="h-4 w-4 text-slate-500" />
                   {formatDate(post.updatedAt)}
                 </td>
@@ -197,7 +196,7 @@ export function PostsTable() {
         ) : null}
       </div>
 
-      <div className="flex items-center justify-between text-sm text-slate-600">
+      <div className="flex items-center justify-between text-sm text-slate-700">
         <div>
           Showing {(data?.posts.length ?? 0)} of {data?.pagination.total ?? 0}
         </div>

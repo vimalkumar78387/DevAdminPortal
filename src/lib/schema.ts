@@ -9,6 +9,7 @@ import {
   uuid,
   varchar,
   serial,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
 
@@ -113,3 +114,30 @@ export const communityAnswersRelations = relations(
 export type CommunityPost = typeof communityPosts.$inferSelect;
 export type CommunityAnswer = typeof communityAnswers.$inferSelect;
 export type AdminActivityLog = typeof adminActivityLogs.$inferSelect;
+export type ChangelogEntry = typeof changelogEntries.$inferSelect;
+export type NewChangelogEntry = typeof changelogEntries.$inferInsert;
+
+export const changelogEntries = pgTable("changelog", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  version: varchar("version", { length: 50 }).notNull(),
+  releaseDate: timestamp("release_date", { withTimezone: true }).notNull(),
+  releaseType: varchar("release_type", { length: 20 }).notNull(), // major/minor/patch
+  status: varchar("status", { length: 20 }).notNull(), // latest/stable/deprecated
+  productName: varchar("product_name", { length: 255 }).notNull().default(""),
+  added: text("added").array().default(sql`ARRAY[]::text[]`).notNull(),
+  improved: text("improved").array().default(sql`ARRAY[]::text[]`).notNull(),
+  fixed: text("fixed").array().default(sql`ARRAY[]::text[]`).notNull(),
+  security: text("security").array().default(sql`ARRAY[]::text[]`).notNull(),
+  deprecated: text("deprecated").array().default(sql`ARRAY[]::text[]`).notNull(),
+  breaking: text("breaking").array().default(sql`ARRAY[]::text[]`).notNull(),
+  apiChanges: jsonb("api_changes").$type<
+    Array<{ endpoint: string; description: string; impact: string }>
+  >().default(sql`'[]'::jsonb`).notNull(),
+  migrationTitle: varchar("migration_title", { length: 255 }),
+  migrationDescription: text("migration_description"),
+  migrationCode: text("migration_code"),
+  tags: text("tags").array().default(sql`ARRAY[]::text[]`).notNull(),
+  docsUrl: text("docs_url"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});

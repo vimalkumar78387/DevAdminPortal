@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS "changelog" (
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  "version" varchar(50) NOT NULL,
+  "release_date" timestamptz NOT NULL,
+  "release_type" varchar(20) NOT NULL,
+  "status" varchar(20) NOT NULL,
+  "added" text[] DEFAULT ARRAY[]::text[] NOT NULL,
+  "improved" text[] DEFAULT ARRAY[]::text[] NOT NULL,
+  "fixed" text[] DEFAULT ARRAY[]::text[] NOT NULL,
+  "security" text[] DEFAULT ARRAY[]::text[] NOT NULL,
+  "deprecated" text[] DEFAULT ARRAY[]::text[] NOT NULL,
+  "breaking" text[] DEFAULT ARRAY[]::text[] NOT NULL,
+  "api_changes" jsonb DEFAULT '[]'::jsonb NOT NULL,
+  "migration_title" varchar(255),
+  "migration_description" text,
+  "migration_code" text,
+  "tags" text[] DEFAULT ARRAY[]::text[] NOT NULL,
+  "docs_url" text,
+  "created_at" timestamptz DEFAULT now() NOT NULL,
+  "updated_at" timestamptz DEFAULT now() NOT NULL
+);

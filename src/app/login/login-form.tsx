@@ -57,7 +57,7 @@ export function LoginForm() {
         <p className="text-sm font-medium text-red-600">{state.error}</p>
       ) : (
         <p className="text-sm text-slate-500">
-          Use the admin credentials provided in your environment variables.
+          Please enter your username and password.
         </p>
       )}
       <SubmitButton />

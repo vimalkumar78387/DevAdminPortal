@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/community/posts", label: "Community Posts", icon: MessageSquare },
+  { href: "/admin/changelog", label: "Changelog Post", icon: BadgeCheck },
   // Placeholder for answers tab if needed later
 ];
 
@@ -21,15 +22,14 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-0 flex h-screen w-64 flex-col border-r border-white/10 bg-slate-950/80 px-4 py-6 text-white shadow-xl shadow-slate-900/30 backdrop-blur">
-      <div className="flex items-center gap-3 rounded-xl bg-white/5 px-3 py-2 ring-1 ring-white/10">
+    <aside className="sticky top-0 flex h-screen w-64 flex-col border-r border-white/10 bg-gradient-to-b from-blue-900 via-blue-800 to-slate-950 px-4 py-6 text-white shadow-xl shadow-slate-900/40 backdrop-blur">
+      <div className="flex items-center gap-3 px-1">
         <img
-          src="https://settlepaisa.sabpaisa.in/img/logo/logo-dark-full.png"
+          src="https://sabpaisa.in/wp-content/uploads/2023/06/logo.png"
           alt="SabPaisa logo"
-          className="h-6 w-auto drop-shadow"
+          className="h-7 w-auto drop-shadow"
           loading="lazy"
         />
-        <BadgeCheck className="h-6 w-6 text-emerald-400" />
       </div>
       <nav className="mt-8 space-y-1">
         {links.map((link) => {
@@ -42,7 +42,7 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition hover:translate-x-1",
                 active
-                  ? "bg-emerald-500/20 text-white ring-1 ring-emerald-400/60 shadow-lg shadow-emerald-900/40"
+                  ? "bg-blue-500/25 text-white ring-1 ring-blue-400/60 shadow-lg shadow-blue-900/40"
                   : "text-white/70 hover:bg-white/5 hover:text-white"
               )}
             >

@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { SESSION_COOKIE_NAME, verifySessionToken } from "@/lib/session";
 
-const PROTECTED_PATHS = ["/admin", "/api/admin"];
+const PROTECTED_PATHS = ["/admin", "/api/admin", "/api/changelog"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -40,5 +40,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/login", "/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/login", "/admin/:path*", "/api/admin/:path*", "/api/changelog/:path*"],
 };
