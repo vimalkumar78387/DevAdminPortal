@@ -19,7 +19,7 @@ export function CardHeader({
   actions,
 }: {
   title: string;
-  description?: string;
+  description?: React.ReactNode;
   actions?: React.ReactNode;
 }) {
   return (
@@ -27,7 +27,7 @@ export function CardHeader({
       <div>
         <p className="text-sm font-semibold text-slate-900">{title}</p>
         {description ? (
-          <p className="text-xs text-slate-500">{description}</p>
+          <div className="text-xs text-slate-500">{description}</div>
         ) : null}
       </div>
       {actions}

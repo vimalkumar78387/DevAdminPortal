@@ -4,6 +4,7 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { getChangelog } from "@/lib/changelog";
 import { formatDate } from "@/lib/utils";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 function Section({ title, items }: { title: string; items: string[] }) {
   return (
@@ -33,9 +34,15 @@ export default async function ChangelogDetailPage({ params }: { params: Promise<
         title={`Version ${entry.version}`}
         subtitle={`Release date ${formatDate(entry.releaseDate)} • ${entry.releaseType}`}
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge variant="muted">{entry.productName || "General"}</Badge>
             <Badge>{entry.status}</Badge>
+            <Link
+              href="/admin/changelog"
+              className="rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-slate-800"
+            >
+              Back to changelogs
+            </Link>
           </div>
         }
       />

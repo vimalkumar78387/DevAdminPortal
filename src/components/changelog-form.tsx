@@ -1,14 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Modal } from "./ui/modal";
 import toast from "react-hot-toast";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 
 const releaseTypes = ["Major", "Minor", "Patch"] as const;
 const statuses = ["Latest", "Stable", "Deprecated"] as const;
@@ -16,37 +16,20 @@ const impacts = ["Breaking", "Non-breaking"] as const;
 
 type ApiChange = { endpoint: string; description: string; impact: string };
 
-type SectionKey =
-  | "added"
-  | "improved"
-  | "fixed"
-  | "security"
-  | "deprecated"
-  | "breaking";
-
-type SectionItem = { id: string; value: string };
-
 export function ChangelogForm() {
   const router = useRouter();
-  const idRef = useRef(0);
-  const nextId = () => {
-    const val = idRef.current;
-    idRef.current += 1;
-    return `row-${val}`;
-  };
+  const formRef = useRef<HTMLFormElement>(null);
+  const addedText = useRef("");
+  const improvedText = useRef("");
+  const fixedText = useRef("");
+  const securityText = useRef("");
+  const deprecatedText = useRef("");
+  const breakingText = useRef("");
   const [version, setVersion] = useState("");
   const [productName, setProductName] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
   const [releaseType, setReleaseType] = useState<(typeof releaseTypes)[number]>("Minor");
   const [status, setStatus] = useState<(typeof statuses)[number]>("Stable");
-  const [sections, setSections] = useState<Record<SectionKey, SectionItem[]>>({
-    added: [{ id: nextId(), value: "" }],
-    improved: [],
-    fixed: [],
-    security: [],
-    deprecated: [],
-    breaking: [],
-  });
   const [apiChanges, setApiChanges] = useState<ApiChange[]>([]);
   const [migrationTitle, setMigrationTitle] = useState("");
   const [migrationDescription, setMigrationDescription] = useState("");
@@ -56,27 +39,6 @@ export function ChangelogForm() {
   const [docsUrl, setDocsUrl] = useState("");
   const [saving, setSaving] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
-  const handleSectionChange = (key: SectionKey, idx: number, value: string) => {
-    setSections((prev) => ({
-      ...prev,
-      [key]: prev[key].map((item, i) => (i === idx ? { ...item, value } : item)),
-    }));
-  };
-
-  const addSectionRow = (key: SectionKey) => {
-    setSections((prev) => ({
-      ...prev,
-      [key]: [...prev[key], { id: nextId(), value: "" }],
-    }));
-  };
-
-  const removeSectionRow = (key: SectionKey, idx: number) => {
-    setSections((prev) => ({
-      ...prev,
-      [key]: prev[key].filter((_, i) => i !== idx),
-    }));
-  };
 
   const addApiChange = () => {
     setApiChanges((prev) => [...prev, { endpoint: "", description: "", impact: "Breaking" }]);
@@ -98,11 +60,19 @@ export function ChangelogForm() {
 
   const removeTag = (tag: string) => setTags((prev) => prev.filter((t) => t !== tag));
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e?: FormEvent<HTMLFormElement>) => {
+    e?.preventDefault();
     if (!version.trim() || !releaseDate) {
       toast.error("Version and release date are required");
       return;
     }
+
+    const lines = (value: string) =>
+      (value || "")
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+
     setSaving(true);
     const payload = {
       version,
@@ -110,12 +80,12 @@ export function ChangelogForm() {
       releaseType,
       status,
       productName,
-      added: sections.added.map((i) => i.value).filter(Boolean),
-      improved: sections.improved.map((i) => i.value).filter(Boolean),
-      fixed: sections.fixed.map((i) => i.value).filter(Boolean),
-      security: sections.security.map((i) => i.value).filter(Boolean),
-      deprecated: sections.deprecated.map((i) => i.value).filter(Boolean),
-      breaking: sections.breaking.map((i) => i.value).filter(Boolean),
+      added: lines(addedText.current),
+      improved: lines(improvedText.current),
+      fixed: lines(fixedText.current),
+      security: lines(securityText.current),
+      deprecated: lines(deprecatedText.current),
+      breaking: lines(breakingText.current),
       apiChanges: apiChanges.filter((a) => a.endpoint || a.description),
       migrationTitle: migrationTitle || undefined,
       migrationDescription: migrationDescription || undefined,
@@ -141,31 +111,27 @@ export function ChangelogForm() {
     }
   };
 
-  const Section = ({ keyName, title }: { keyName: SectionKey; title: string }) => (
+  const SectionSingle = ({
+    title,
+    onChange,
+  }: {
+    title: string;
+    onChange: (value: string) => void;
+  }) => (
     <Card className="bg-white">
       <CardHeader title={title} description={`Add ${title.toLowerCase()} notes`} />
-      <div className="space-y-2">
-        {sections[keyName].map((item, idx) => (
-          <div className="flex items-center gap-2" key={item.id}>
-            <Input
-              value={item.value}
-              onChange={(e) => handleSectionChange(keyName, idx, e.target.value)}
-              placeholder={`${title} item`}
-            />
-            <Button variant="ghost" type="button" onClick={() => removeSectionRow(keyName, idx)}>
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
-        <Button variant="outline" type="button" onClick={() => addSectionRow(keyName)}>
-          <Plus className="h-4 w-4" /> Add Row
-        </Button>
-      </div>
+      <textarea
+        rows={3}
+        autoComplete="off"
+        className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+        placeholder={`${title} item`}
+        onChange={(e) => onChange(e.target.value)}
+      />
     </Card>
   );
 
   return (
-    <div className="space-y-6">
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
       <Card className="bg-white">
         <CardHeader title="Basic Information" />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -213,12 +179,12 @@ export function ChangelogForm() {
       </Card>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Section keyName="added" title="Added" />
-        <Section keyName="improved" title="Improved" />
-        <Section keyName="fixed" title="Fixed" />
-        <Section keyName="security" title="Security" />
-        <Section keyName="deprecated" title="Deprecated" />
-        <Section keyName="breaking" title="Breaking Changes" />
+        <SectionSingle title="Added" onChange={(v) => (addedText.current = v)} />
+        <SectionSingle title="Improved" onChange={(v) => (improvedText.current = v)} />
+        <SectionSingle title="Fixed" onChange={(v) => (fixedText.current = v)} />
+        <SectionSingle title="Security" onChange={(v) => (securityText.current = v)} />
+        <SectionSingle title="Deprecated" onChange={(v) => (deprecatedText.current = v)} />
+        <SectionSingle title="Breaking Changes" onChange={(v) => (breakingText.current = v)} />
       </div>
 
       <Card className="bg-white">
@@ -353,7 +319,7 @@ fetch('/v2/payments', { method: 'POST' })`}
         <Button variant="outline" type="button" onClick={() => setShowConfirm(true)} disabled={saving}>
           Cancel
         </Button>
-        <Button onClick={handleSubmit} disabled={saving}>
+        <Button type="submit" disabled={saving}>
           {saving ? "Saving..." : "Save Changelog"}
         </Button>
       </div>
@@ -367,6 +333,6 @@ fetch('/v2/payments', { method: 'POST' })`}
         title="Discard changes?"
         description="You have unsaved changes. Leave without saving?"
       />
-    </div>
+    </form>
   );
 }

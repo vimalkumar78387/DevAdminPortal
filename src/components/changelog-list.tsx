@@ -81,19 +81,9 @@ export function ChangelogList() {
       ) : null}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {sorted.map((entry) => (
-            <Card key={entry.id} className="bg-white">
-              <CardHeader
-                title={`Version ${entry.version}`}
-                description={
-                  <div className="flex flex-wrap gap-2 text-sm text-slate-600">
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600">
-                      <Calendar className="h-4 w-4" /> {formatDate(entry.releaseDate)}
-                    </span>
-                    <Badge variant="muted">{entry.productName || "General"}</Badge>
-                    {typeBadge(entry.releaseType)}
-                    {statusBadge(entry.status)}
-                  </div>
-                }
+          <Card key={entry.id} className="bg-white">
+            <CardHeader
+              title={`Version ${entry.version}`}
               actions={
                 <div className="flex items-center gap-2">
                   <Link
@@ -109,6 +99,14 @@ export function ChangelogList() {
               }
             />
             <div className="space-y-2 px-4 pb-4 text-sm text-slate-700">
+              <div className="flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
+                <span className="inline-flex items-center gap-1">
+                  <Calendar className="h-4 w-4" /> {formatDate(entry.releaseDate)}
+                </span>
+                <Badge variant="muted">{entry.productName || "General"}</Badge>
+                {typeBadge(entry.releaseType)}
+                {statusBadge(entry.status)}
+              </div>
               <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-slate-500">
                 <Sparkles className="h-4 w-4 text-indigo-500" /> Preview
               </div>
